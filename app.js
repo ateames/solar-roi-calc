@@ -1,5 +1,5 @@
 function calculateROI() {
-  // Get form values
+  // Gather user inputs
   let totalCost = parseFloat(document.getElementById('totalCost').value);
   let kwSize = parseFloat(document.getElementById('kwSize').value);
   let electricityBill = parseFloat(document.getElementById('electricityBill').value);
@@ -8,25 +8,19 @@ function calculateROI() {
   let interestRate = parseFloat(document.getElementById('interestRate').value);
   let loanTerm = parseFloat(document.getElementById('loanTerm').value);
 
-  // Calculate tax credit
+  // Calculations
   let taxCredit = totalCost * (taxCreditPercentage / 100);
   let costWithTaxCredit = totalCost - taxCredit;
   let costPerWWithoutTaxCredit = (totalCost / (kwSize * 1000)).toFixed(2);
   let costPerWWithTaxCredit = (costWithTaxCredit / (kwSize * 1000)).toFixed(2);
-
-  // Loan Calculations (Monthly payments)
-  let monthlyInterestRate = interestRate / 12 / 100;
-  let totalMonths = loanTerm * 12;
-  
-  let monthlyPaymentWithoutTaxCredit = (totalCost * monthlyInterestRate) / 
-    (1 - Math.pow((1 + monthlyInterestRate), -totalMonths));
-
-  let monthlyPaymentWithTaxCredit = (costWithTaxCredit * monthlyInterestRate) / 
-    (1 - Math.pow((1 + monthlyInterestRate), -totalMonths));
-
-  // Calculate solar payback in years and months
   let paybackWithoutTaxCredit = totalCost / (electricityBill * 12);
   let paybackWithTaxCredit = costWithTaxCredit / (electricityBill * 12);
+
+  // Monthly loan payments calculations
+  let monthlyInterestRate = interestRate / 12 / 100;
+  let totalMonths = loanTerm * 12;
+  let monthlyPaymentWithoutTaxCredit = (totalCost * monthlyInterestRate) / (1 - Math.pow((1 + monthlyInterestRate), -totalMonths));
+  let monthlyPaymentWithTaxCredit = (costWithTaxCredit * monthlyInterestRate) / (1 - Math.pow((1 + monthlyInterestRate), -totalMonths));
 
   // Display results
   let results = `
@@ -40,7 +34,11 @@ function calculateROI() {
   
   document.getElementById('results').innerHTML = results;
 
-  // Create the chart for payback with tax credit
+  // Create the charts for payback with and without tax credit
+  generatePaybackCharts(paybackWithTaxCredit, paybackWithoutTaxCredit);
+}
+
+function generatePaybackCharts(paybackWithTaxCredit, paybackWithoutTaxCredit) {
   const paybackChartWithTaxCredit = new Chart(document.getElementById('paybackChartWithTaxCredit'), {
     type: 'bar',
     data: {
@@ -58,7 +56,6 @@ function calculateROI() {
     }
   });
 
-  // Create the chart for payback without tax credit
   const paybackChartWithoutTaxCredit = new Chart(document.getElementById('paybackChartWithoutTaxCredit'), {
     type: 'bar',
     data: {
