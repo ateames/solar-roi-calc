@@ -4,50 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Solar ROI Calculator</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input { display: block; margin: 10px 0; padding: 10px; width: 100%; }
-    button { padding: 10px; background-color: #28a745; color: white; border: none; cursor: pointer; }
-    button:hover { background-color: #218838; }
-    .results { margin-top: 20px; }
-    canvas { margin-top: 20px; }
-  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { padding: 20px; }
+    .results, .charts { margin-top: 30px; }
+  </style>
 </head>
 <body>
-  <h1>Solar ROI Calculator</h1>
-  <form id="solarForm">
-    <label>Total Cost of Solar System:</label>
-    <input type="number" id="totalCost" placeholder="Enter total cost" required>
+  <div class="container">
+    <h1>Solar ROI Calculator</h1>
+    
+    <h2>Solar System Criteria</h2>
+    <form id="solarForm">
+      <div class="mb-3">
+        <label>Total cost of the solar system</label>
+        <input type="number" id="totalCost" class="form-control" placeholder="Enter total cost" required>
+      </div>
+      <div class="mb-3">
+        <label>Solar System kW size</label>
+        <input type="number" id="kwSize" class="form-control" placeholder="Enter kW size" required>
+      </div>
+      <div class="mb-3">
+        <label>Average cost electricity bill</label>
+        <input type="number" id="electricityBill" class="form-control" placeholder="Enter average electricity bill" required>
+      </div>
+      <div class="mb-3">
+        <label>Number of years to live in the home</label>
+        <input type="number" id="yearsStay" class="form-control" placeholder="Enter number of years" required>
+      </div>
+      <div class="mb-3">
+        <label>Tax credit percentage (%)</label>
+        <input type="number" id="taxCredit" class="form-control" placeholder="Enter tax credit percentage" required>
+      </div>
 
-    <label>kW Size of the System:</label>
-    <input type="number" id="kwSize" placeholder="Enter kW size" required>
+      <h2>Financed Criteria</h2>
+      <div class="mb-3">
+        <label>Loan interest rate (%)</label>
+        <input type="number" id="interestRate" class="form-control" placeholder="Enter interest rate" required>
+      </div>
+      <div class="mb-3">
+        <label>Loan term (years)</label>
+        <input type="number" id="loanTerm" class="form-control" placeholder="Enter loan term" required>
+      </div>
+      
+      <button type="button" class="btn btn-primary" onclick="calculateROI()">Calculate ROI</button>
+    </form>
 
-    <label>Average Electricity Bill ($):</label>
-    <input type="number" id="electricityBill" placeholder="Enter average electricity bill" required>
-
-    <label>Years Planning to Stay:</label>
-    <input type="number" id="yearsStay" placeholder="Enter number of years" required>
-
-    <label>Tax Credit Percentage (%):</label>
-    <input type="number" id="taxCredit" placeholder="Enter tax credit percentage" required>
-
-    <label>Interest Rate for Loan (%):</label>
-    <input type="number" id="interestRate" placeholder="Enter interest rate" required>
-
-    <label>Loan Term (Years):</label>
-    <input type="number" id="loanTerm" placeholder="Enter loan term" required>
-
-    <button type="button" onclick="calculateROI()">Calculate ROI</button>
-  </form>
-
-  <div class="results" id="results">
-    <!-- Results will be displayed here -->
+    <div class="results" id="results"></div>
+    <div class="charts">
+      <canvas id="paybackChartWithTaxCredit"></canvas>
+      <canvas id="paybackChartWithoutTaxCredit"></canvas>
+    </div>
   </div>
-
-  <!-- Chart containers -->
-  <canvas id="paybackChartWithTaxCredit"></canvas>
-  <canvas id="paybackChartWithoutTaxCredit"></canvas>
 
   <script src="app.js"></script>
 </body>
