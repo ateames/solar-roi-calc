@@ -9,50 +9,28 @@ function calculateROI() {
   let interestRate = parseFloat(document.getElementById('interestRate').value);
   let loanTerm = parseFloat(document.getElementById('loanTerm').value);
 
-  // Calculate the tax credit
+  // Calculations
   let taxCredit = totalCost * (taxCreditPercentage / 100);
   let costWithTaxCredit = totalCost - taxCredit;
-  
-  // Accumulated savings for each year
+  let costPerWWithoutTaxCredit = (totalCost / (kwSize * 1000)).toFixed(2);
+  let costPerWWithTaxCredit = (costWithTaxCredit / (kwSize * 1000)).toFixed(2);
+
+  // Adjusting electricity bill with yearly rate increase
   let adjustedElectricityBill = electricityBill;
   let totalSavingsWithoutTaxCredit = 0;
   let totalSavingsWithTaxCredit = 0;
 
-  let paybackWithoutTaxCreditYears = 0;
-  let paybackWithoutTaxCreditMonths = 0;
-  let paybackWithTaxCreditYears = 0;
-  let paybackWithTaxCreditMonths = 0;
-
-  // Loop to calculate cumulative savings year by year
   for (let year = 1; year <= yearsStay; year++) {
-    // Calculate annual savings
-    let annualSavings = adjustedElectricityBill * 12;
-
-    // Accumulate savings for payback without tax credit
-    if (totalSavingsWithoutTaxCredit < totalCost) {
-      totalSavingsWithoutTaxCredit += annualSavings;
-      if (totalSavingsWithoutTaxCredit >= totalCost) {
-        // When payback is reached, calculate the exact year and month
-        let overSavings = totalSavingsWithoutTaxCredit - totalCost;
-        paybackWithoutTaxCreditYears = year;
-        paybackWithoutTaxCreditMonths = Math.round((overSavings / annualSavings) * 12);
-      }
-    }
-
-    // Accumulate savings for payback with tax credit
-    if (totalSavingsWithTaxCredit < costWithTaxCredit) {
-      totalSavingsWithTaxCredit += annualSavings;
-      if (totalSavingsWithTaxCredit >= costWithTaxCredit) {
-        // When payback is reached, calculate the exact year and month
-        let overSavings = totalSavingsWithTaxCredit - costWithTaxCredit;
-        paybackWithTaxCreditYears = year;
-        paybackWithTaxCreditMonths = Math.round((overSavings / annualSavings) * 12);
-      }
-    }
-
-    // Increase the electricity bill for the next year based on the rate increase
+    totalSavingsWithoutTaxCredit += adjustedElectricityBill * 12;
+    totalSavingsWithTaxCredit += adjustedElectricityBill * 12;
+    
+    // Increase the electricity bill by the rate increase for the next year
     adjustedElectricityBill += adjustedElectricityBill * (rateIncrease / 100);
   }
+
+  // Payback calculation with and without tax credit over lifetime
+  let paybackWithoutTaxCredit = totalCost / totalSavingsWithoutTaxCredit;
+  let paybackWithTaxCredit = costWithTaxCredit / totalSavingsWithTaxCredit;
 
   // Monthly loan payments calculations
   let monthlyInterestRate = interestRate / 12 / 100;
@@ -60,32 +38,32 @@ function calculateROI() {
   let monthlyPaymentWithoutTaxCredit = (totalCost * monthlyInterestRate) / (1 - Math.pow((1 + monthlyInterestRate), -totalMonths));
   let monthlyPaymentWithTaxCredit = (costWithTaxCredit * monthlyInterestRate) / (1 - Math.pow((1 + monthlyInterestRate), -totalMonths));
 
-  // Display the results
+  // Display results
   let results = `
     <h2>Results:</h2>
     <p>Cost w/ ${taxCreditPercentage}% tax credit: $${costWithTaxCredit.toFixed(2)}</p>
-    <p>Cost per W w/o tax credit: ${(totalCost / (kwSize * 1000)).toFixed(2)}</p>
-    <p>Cost per W w/ tax credit: ${(costWithTaxCredit / (kwSize * 1000)).toFixed(2)}</p>
+    <p>Cost per W w/o tax credit: $${costPerWWithoutTaxCredit}</p>
+    <p>Cost per W w/ tax credit: $${costPerWWithTaxCredit}</p>
     <p>Monthly Payments w/ Tax Credit: $${monthlyPaymentWithTaxCredit.toFixed(2)}</p>
     <p>Monthly Payments w/o Tax Credit: $${monthlyPaymentWithoutTaxCredit.toFixed(2)}</p>
-    <p>Payback w/o tax credit: ${paybackWithoutTaxCreditYears} Years and ${paybackWithoutTaxCreditMonths} Months</p>
-    <p>Payback w/ tax credit: ${paybackWithTaxCreditYears} Years and ${paybackWithTaxCreditMonths} Months</p>
+    <p>Payback w/o tax credit: ${paybackWithoutTaxCredit.toFixed(2)} years</p>
+    <p>Payback w/ tax credit: ${paybackWithTaxCredit.toFixed(2)} years</p>
   `;
-  
+
   document.getElementById('results').innerHTML = results;
 
   // Generate the charts to visualize payback periods
-  generatePaybackCharts(paybackWithTaxCreditYears, paybackWithTaxCreditMonths, paybackWithoutTaxCreditYears, paybackWithoutTaxCreditMonths);
+  generatePaybackCharts(paybackWithTaxCredit, paybackWithoutTaxCredit);
 }
 
-function generatePaybackCharts(paybackWithTaxCreditYears, paybackWithTaxCreditMonths, paybackWithoutTaxCreditYears, paybackWithoutTaxCreditMonths) {
+function generatePaybackCharts(paybackWithTaxCredit, paybackWithoutTaxCredit) {
   const paybackChartWithTaxCredit = new Chart(document.getElementById('paybackChartWithTaxCredit'), {
     type: 'bar',
     data: {
       labels: ['Payback (Years)', 'Payback (Months)'],
       datasets: [{
         label: 'Solar Payback w/ Tax Credit',
-        data: [paybackWithTaxCreditYears, paybackWithTaxCreditMonths],
+        data: [Math.floor(paybackWithTaxCredit), (paybackWithTaxCredit % 1 * 12).toFixed(0)],
         backgroundColor: ['#28a745', '#28a745']
       }]
     },
@@ -102,7 +80,7 @@ function generatePaybackCharts(paybackWithTaxCreditYears, paybackWithTaxCreditMo
       labels: ['Payback (Years)', 'Payback (Months)'],
       datasets: [{
         label: 'Solar Payback w/o Tax Credit',
-        data: [paybackWithoutTaxCreditYears, paybackWithoutTaxCreditMonths],
+        data: [Math.floor(paybackWithoutTaxCredit), (paybackWithoutTaxCredit % 1 * 12).toFixed(0)],
         backgroundColor: ['#dc3545', '#dc3545']
       }]
     },
