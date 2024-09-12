@@ -5,6 +5,7 @@ function calculateROI() {
   let electricityBill = parseFloat(document.getElementById('electricityBill').value);
   let yearsStay = parseFloat(document.getElementById('yearsStay').value);
   let taxCreditPercentage = parseFloat(document.getElementById('taxCredit').value);
+  let rateIncrease = parseFloat(document.getElementById('rateIncrease').value);
   let interestRate = parseFloat(document.getElementById('interestRate').value);
   let loanTerm = parseFloat(document.getElementById('loanTerm').value);
 
@@ -13,8 +14,23 @@ function calculateROI() {
   let costWithTaxCredit = totalCost - taxCredit;
   let costPerWWithoutTaxCredit = (totalCost / (kwSize * 1000)).toFixed(2);
   let costPerWWithTaxCredit = (costWithTaxCredit / (kwSize * 1000)).toFixed(2);
-  let paybackWithoutTaxCredit = totalCost / (electricityBill * 12);
-  let paybackWithTaxCredit = costWithTaxCredit / (electricityBill * 12);
+
+  // Adjusting electricity bill with yearly rate increase
+  let adjustedElectricityBill = electricityBill;
+  let totalSavingsWithoutTaxCredit = 0;
+  let totalSavingsWithTaxCredit = 0;
+
+  for (let year = 1; year <= yearsStay; year++) {
+    totalSavingsWithoutTaxCredit += adjustedElectricityBill * 12;
+    totalSavingsWithTaxCredit += adjustedElectricityBill * 12;
+    
+    // Increase the electricity bill by the rate increase for the next year
+    adjustedElectricityBill += adjustedElectricityBill * (rateIncrease / 100);
+  }
+
+  // Payback calculation with and without tax credit over lifetime
+  let paybackWithoutTaxCredit = totalCost / totalSavingsWithoutTaxCredit;
+  let paybackWithTaxCredit = costWithTaxCredit / totalSavingsWithTaxCredit;
 
   // Monthly loan payments calculations
   let monthlyInterestRate = interestRate / 12 / 100;
@@ -30,11 +46,13 @@ function calculateROI() {
     <p>Cost per W w/ tax credit: $${costPerWWithTaxCredit}</p>
     <p>Monthly Payments w/ Tax Credit: $${monthlyPaymentWithTaxCredit.toFixed(2)}</p>
     <p>Monthly Payments w/o Tax Credit: $${monthlyPaymentWithoutTaxCredit.toFixed(2)}</p>
+    <p>Payback w/o tax credit: ${paybackWithoutTaxCredit.toFixed(2)} years</p>
+    <p>Payback w/ tax credit: ${paybackWithTaxCredit.toFixed(2)} years</p>
   `;
-  
+
   document.getElementById('results').innerHTML = results;
 
-  // Create the charts for payback with and without tax credit
+  // Generate the charts to visualize payback periods
   generatePaybackCharts(paybackWithTaxCredit, paybackWithoutTaxCredit);
 }
 
