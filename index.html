@@ -15,41 +15,45 @@
   <div class="container">
     <h1>Solar ROI Calculator</h1>
     
-    <h2>Solar System Criteria</h2>
-    <form id="solarForm">
-      <div class="mb-3">
-        <label>Total cost of the solar system</label>
-        <input type="number" id="totalCost" class="form-control" placeholder="Enter total cost" required>
-      </div>
-      <div class="mb-3">
-        <label>Solar System kW size</label>
-        <input type="number" id="kwSize" class="form-control" placeholder="Enter kW size" required>
-      </div>
-      <div class="mb-3">
-        <label>Average cost electricity bill</label>
-        <input type="number" id="electricityBill" class="form-control" placeholder="Enter average electricity bill" required>
-      </div>
-      <div class="mb-3">
-        <label>Number of years to live in the home</label>
-        <input type="number" id="yearsStay" class="form-control" placeholder="Enter number of years" required>
-      </div>
-      <div class="mb-3">
-        <label>Tax credit percentage (%)</label>
-        <input type="number" id="taxCredit" class="form-control" placeholder="Enter tax credit percentage" required>
-      </div>
+   <h2>Solar System Criteria</h2>
+<form id="solarForm">
+  <div class="mb-3">
+    <label>Total cost of the solar system</label>
+    <input type="number" id="totalCost" class="form-control" placeholder="Enter total cost" required>
+  </div>
+  <div class="mb-3">
+    <label>Solar System kW size</label>
+    <input type="number" id="kwSize" class="form-control" placeholder="Enter kW size" required>
+  </div>
+  <div class="mb-3">
+    <label>Average cost electricity bill</label>
+    <input type="number" id="electricityBill" class="form-control" placeholder="Enter average electricity bill" required>
+  </div>
+  <div class="mb-3">
+    <label>Number of years to live in the home</label>
+    <input type="number" id="yearsStay" class="form-control" placeholder="Enter number of years" required>
+  </div>
+  <div class="mb-3">
+    <label>Tax credit percentage (%)</label>
+    <input type="number" id="taxCredit" class="form-control" placeholder="Enter tax credit percentage" required>
+  </div>
+  <div class="mb-3">
+    <label>Year-over-Year Electricity Rate Increase (%)</label>
+    <input type="number" id="rateIncrease" class="form-control" placeholder="Enter yearly rate increase percentage" required>
+  </div>
 
-      <h2>Financed Criteria</h2>
-      <div class="mb-3">
-        <label>Loan interest rate (%)</label>
-        <input type="number" id="interestRate" class="form-control" placeholder="Enter interest rate" required>
-      </div>
-      <div class="mb-3">
-        <label>Loan term (years)</label>
-        <input type="number" id="loanTerm" class="form-control" placeholder="Enter loan term" required>
-      </div>
-      
-      <button type="button" class="btn btn-primary" onclick="calculateROI()">Calculate ROI</button>
-    </form>
+  <h2>Financed Criteria</h2>
+  <div class="mb-3">
+    <label>Loan interest rate (%)</label>
+    <input type="number" id="interestRate" class="form-control" placeholder="Enter interest rate" required>
+  </div>
+  <div class="mb-3">
+    <label>Loan term (years)</label>
+    <input type="number" id="loanTerm" class="form-control" placeholder="Enter loan term" required>
+  </div>
+
+  <button type="button" class="btn btn-primary" onclick="calculateROI()">Calculate ROI</button>
+</form>
 
     <div class="results" id="results"></div>
     <div class="charts">
