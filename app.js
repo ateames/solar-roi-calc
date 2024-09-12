@@ -85,7 +85,7 @@ function generatePaybackCharts(paybackWithTaxCreditYears, paybackWithTaxCreditMo
       labels: ['Payback (Years)', 'Payback (Months)'],
       datasets: [{
         label: 'Solar Payback w/ Tax Credit',
-        data: [paybackWithTaxCreditYears, paybackWithTaxCreditMonths],
+        data: [Math.floor(paybackWithTaxCreditYears), (paybackWithTaxCredit % 1 * 12).toFixed(0)],
         backgroundColor: ['#28a745', '#28a745']
       }]
     },
@@ -102,7 +102,7 @@ function generatePaybackCharts(paybackWithTaxCreditYears, paybackWithTaxCreditMo
       labels: ['Payback (Years)', 'Payback (Months)'],
       datasets: [{
         label: 'Solar Payback w/o Tax Credit',
-        data: [paybackWithoutTaxCreditYears, paybackWithoutTaxCreditMonths],
+        data: [Math.floor(paybackWithoutTaxCreditYears), (paybackWithoutTaxCredit % 1 * 12).toFixed(0)],
         backgroundColor: ['#dc3545', '#dc3545']
       }]
     },
