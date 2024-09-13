@@ -3,7 +3,6 @@ function calculateROI() {
   let totalCost = parseFloat(document.getElementById('totalCost').value);
   let kwSize = parseFloat(document.getElementById('kwSize').value);
   let electricityBill = parseFloat(document.getElementById('electricityBill').value);
-  let yearsStay = parseFloat(document.getElementById('yearsStay').value);
   let taxCreditPercentage = parseFloat(document.getElementById('taxCredit').value);
   let rateIncrease = parseFloat(document.getElementById('rateIncrease').value);
   let interestRate = parseFloat(document.getElementById('interestRate').value);
@@ -24,7 +23,9 @@ function calculateROI() {
   let paybackWithTaxCreditMonths = 0;
 
   // Loop to calculate cumulative savings year by year
-  for (let year = 1; year <= yearsStay; year++) {
+  let year = 0;
+  while (totalSavingsWithoutTaxCredit < totalCost || totalSavingsWithTaxCredit < costWithTaxCredit) {
+    year++;
     // Calculate annual savings
     let annualSavings = adjustedElectricityBill * 12;
 
@@ -85,7 +86,7 @@ function generatePaybackCharts(paybackWithTaxCreditYears, paybackWithTaxCreditMo
       labels: ['Payback (Years)', 'Payback (Months)'],
       datasets: [{
         label: 'Solar Payback w/ Tax Credit',
-        data: [Math.floor(paybackWithTaxCreditYears), (paybackWithTaxCredit % 1 * 12).toFixed(0)],
+        data: [paybackWithTaxCreditYears, paybackWithTaxCreditMonths],
         backgroundColor: ['#28a745', '#28a745']
       }]
     },
@@ -102,7 +103,7 @@ function generatePaybackCharts(paybackWithTaxCreditYears, paybackWithTaxCreditMo
       labels: ['Payback (Years)', 'Payback (Months)'],
       datasets: [{
         label: 'Solar Payback w/o Tax Credit',
-        data: [Math.floor(paybackWithoutTaxCreditYears), (paybackWithoutTaxCredit % 1 * 12).toFixed(0)],
+        data: [paybackWithoutTaxCreditYears, paybackWithoutTaxCreditMonths],
         backgroundColor: ['#dc3545', '#dc3545']
       }]
     },
